@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // เส้นทางทดสอบ API
 app.get('/', (req, res) => {
-    res.send('🎉 Welcome to REST API!');
+    res.send('<h1>Hello Manussavee</h1>🎉 Welcome to REST API!');
 });
 
 // เริ่มต้นเซิร์ฟเวอร์
