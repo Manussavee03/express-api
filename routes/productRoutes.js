@@ -1,26 +1,32 @@
-const express = require('express');
-const Product = require('../models/Product');
-const router = express.Router();
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-// 📌 ดึงข้อมูลสินค้าทั้งหมด
-router.get('/products', async (req, res) => {
-    try {
-        const products = await Product.find();
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+function ProductList() {
+  const [products, setProducts] = useState([]);
 
-// 📌 เพิ่มสินค้าใหม่
-router.post('/products', async (req, res) => {
-    try {
-        const newProduct = new Product(req.body);
-        await newProduct.save();
-        res.status(201).json(newProduct);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+  // 🔄 ดึงข้อมูลเมื่อคอมโพเนนต์ถูกโหลด
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/products')
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error('❌ เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+      });
+  }, []);
 
-module.exports = router;
+  return (
+    <div>
+      <h2>📦 รายการสินค้า</h2>
+      <ul>
+        {products.map((product) => (
+          <li key={product._id}>
+            🛍 {product.name} - 💰 {product.price} บาท
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default ProductList;
